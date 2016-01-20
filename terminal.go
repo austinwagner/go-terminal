@@ -173,7 +173,7 @@ bool SetCursorPosition(COORDINATE coord) {
 	}
 
 	char output[64];
-	sprintf(output, "\x1B[%d;%d;", adjustedCoord.y, adjustedCoord.x);
+	sprintf(output, "\x1B[%d;%dH", adjustedCoord.y, adjustedCoord.x);
 
 	if (!putstr(STDOUT_FILENO, output)) {
 		goto cleanup;
