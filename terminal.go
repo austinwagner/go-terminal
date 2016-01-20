@@ -10,7 +10,6 @@ typedef struct _COORDINATE {
 	int y;
 } COORDINATE;
 
-
 #if defined(__unix__) || defined(__CYGWIN__) || (defined(__APPLE__) && defined(__MACH__))
 
 #include <termios.h>
@@ -92,7 +91,7 @@ bool GetCursorPosition(COORDINATE * coord) {
 		goto cleanup;
 	}
 
-	if (putstr(STDOUT_FILENO, "\033[6n")) {
+	if (!putstr(STDOUT_FILENO, "\x1B[6n")) {
 		goto cleanup;
 	}
 
@@ -111,6 +110,7 @@ bool GetCursorPosition(COORDINATE * coord) {
 		coord->y = (10 * coord->y) + (c - '0');
 		c = getch(STDOUT_FILENO);
 	}
+	coord->y -= 1;
 
 	if (c != ';') {
 		goto cleanup;
@@ -121,6 +121,7 @@ bool GetCursorPosition(COORDINATE * coord) {
 		coord->x = (10 * coord->x) + (c - '0');
 		c = getch(STDOUT_FILENO);
 	}
+	coord->x -= 1;
 
 	if (c != 'R') {
 		goto cleanup;
