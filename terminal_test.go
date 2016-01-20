@@ -4,12 +4,17 @@ import "testing"
 import "time"
 
 func TestWindowSize(t * testing.T) {
-    err := SetWindowSize(100, 50);
+    origSize, err := WindowSize()
     if err != nil {
         t.Fatal(err)
     }
 
-    time.Sleep(time.Second)
+    err = SetWindowSize(100, 50);
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    time.Sleep(100 * time.Millisecond)
 
     size, err := WindowSize()
     if err != nil {
@@ -17,17 +22,27 @@ func TestWindowSize(t * testing.T) {
     }
 
     if size.Width != 100 || size.Height != 50 {
-        t.Fatal("Mismatched size")
+        t.Fatalf("bad size: got (%d, %d) expected (100, 50)", size.Width, size.Height)
+    }
+
+    err = SetWindowSizeFromSizeInfo(origSize)
+    if err != nil {
+        t.Fatal(err)
     }
 }
 
 func TestCursorPosition(t * testing.T) {
-    err := MoveCursor(5, 6)
+    origPos, err := CursorPosition()
     if err != nil {
         t.Fatal(err)
     }
 
-    time.Sleep(time.Second)
+    err = MoveCursor(5, 6)
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    time.Sleep(100 * time.Millisecond)
 
     pos, err := CursorPosition()
     if err != nil {
@@ -35,7 +50,12 @@ func TestCursorPosition(t * testing.T) {
     }
 
     if pos.X != 5 || pos.Y != 6 {
-        t.Fatal("Mismatched position")
+        t.Fatalf("bad pos: got (%d, %d) expected (5, 6)", pos.X, pos.Y)
+    }
+
+    err = MoveCursorToPoint(origPos)
+    if err != nil {
+        t.Fatal(err)
     }
 }
 
