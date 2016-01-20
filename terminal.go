@@ -18,6 +18,7 @@ typedef struct _COORDINATE {
 #include <string.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <stdio.h>
 
 int getch(int fd) {
 	char buffer[1];
